@@ -36,6 +36,13 @@ function authenticate(req, res, next) {
 }
 
 const router = express.Router();
+// check is running
+router.get("/checking", (req, res) => {
+  res.status(200).json({
+    message: "Server is running",
+  });
+});
+
 // Auth routes
 router.post("/signup", (req, res) => {
   const { username, password, fullName } = req.body;
@@ -220,3 +227,15 @@ app.use("/api/v1/", router);
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`),
 );
+
+setInterval(async () => {
+  try {
+    const response = await fetch(
+      "https://ministry-of-investments-backend.onrender.com/api/v1/checking",
+    );
+    const result = await response.json();
+    console.log(result);
+  } catch (error) {
+    console.error("Error fetching /checking:", error);
+  }
+}, 49000);
